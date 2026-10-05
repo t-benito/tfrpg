@@ -1,0 +1,9 @@
+*.smx
+*.log
+!addons/sourcemod/configs/rpg_data/**
+*.cfg
+*.json
+*.txt
+*.sq3
+*.exe
+*.bat
