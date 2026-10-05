@@ -1,27 +1,28 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#include <sourcemod>
-
 int g_iCredits[MAXPLAYERS + 1];
 
-public void Player_ClientPutInServer(int client)
-{
-	Player_Reset(client);
+methodmap Player {
+	public Player(int client) {
+		return view_as<Player>(client);
+	}
+	
+	property int Credits {
+		public get() {
+			return g_iCredits[view_as<int>(this)];
+		}
+		public set(int val) {
+			g_iCredits[view_as<int>(this)] = val;
+		}
+	}
 }
 
-public void Player_Reset(int client)
-{
-	g_iCredits[client] = 0;
-}
+//public void Player_ClientPutInServer(int client) {
+//	g_Players[client] = Player(client);
+//	// database handles stats
+//}
 
-public int Player_GetCredits(int client)
-{
-	return g_iCredits[client];
-}
-
-public int Player_AddCredits(int client, int amount)
-{
-	g_iCredits[client] += amount;
-	return g_iCredits[client];
+public Player Player_Get(int client) {
+	return view_as<Player>(client);
 }

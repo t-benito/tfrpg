@@ -1,6 +1,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define DEBUG
+
 #define RPG
 #define MAXENTITIES 2048
 
@@ -8,18 +10,15 @@
 #include "rpg/player.sp"
 #include "rpg/rpg_core.sp"
 
-public void OnPluginStart()
-{
+public void OnPluginStart(){
     RPG_PluginStart();
 }
 
-public void OnClientPutInServer(int client)
-{
-	Player_AddCredits(client, 10);
+public void OnClientPutInServer(int client) {
+	Player_Get(client).Credits += 10;
     RPG_ClientPutInServer(client);
 }
 
-public void OnClientDisconnect(int client)
-{
+public void OnClientDisconnect(int client) {
     RPG_ClientDisconnect(client);
 }

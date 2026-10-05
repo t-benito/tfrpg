@@ -10,8 +10,7 @@ KeyValues g_kvDatabase = null;
 
 char g_sPath[PLATFORM_MAX_PATH];
 
-public void DB_PluginStart()
-{
+public void DB_PluginStart() {
 	g_kvDatabase = new KeyValues("savedata");
 	
 	BuildPath(Path_SM, g_sPath, sizeof(g_sPath), SAVE_PATH);
@@ -22,8 +21,7 @@ public void DB_PluginStart()
 	}
 }
 
-public void DB_ClientPutInServer(int client)
-{
+public void DB_ClientPutInServer(int client) {
 	if (IsFakeClient(client))
 		return;
 	
@@ -33,18 +31,17 @@ public void DB_ClientPutInServer(int client)
 		
 	if (g_kvDatabase.JumpToKey(steamid))
 	{
-		g_iCredits[client] = g_kvDatabase.GetNum("credits");
+		Player_Get(client).Credits = g_kvDatabase.GetNum("credits");
 		
 		g_kvDatabase.Rewind();
 	}
 	else
 	{ // default values
-		g_iCredits[client] = 0;
+		Player_Get(client).Credits = 0;
 	}
 }	
 
-public void DB_ClientDisconnect(int client)
-{
+public void DB_ClientDisconnect(int client) {
 	if (IsFakeClient(client))
 		return;
 		
