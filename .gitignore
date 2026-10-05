@@ -1,8 +1,9 @@
 *.smx
 *.log
-!addons/sourcemod/configs/rpg_data/**
 *.cfg
-*.json
+addons/sourcemod/configs/sql-init-scripts/
+addons/sourcemod/configs/geoip/
+*.ini
 *.txt
 *.sq3
 *.exe
