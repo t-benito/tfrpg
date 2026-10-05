@@ -1,8 +1,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define DEBUG
-
 #define RPG
 #define MAXENTITIES 2048
 

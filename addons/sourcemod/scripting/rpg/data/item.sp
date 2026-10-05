@@ -6,21 +6,23 @@
 
 #include <rpg/json>
 
-enum ItemType { // CANNOT be NONE.
-	ARMOR,
-	CONSUMABLE,
+enum ItemType {
+	TYPE_NONE,
+	TYPE_ARMOR,
+	TYPE_CONSUMABLE,
 }
 
 enum ItemSubtype {
-	NONE,
-	PANTS,
-	CHEST,
-	HELMET,
+	SUBTYPE_NONE,
+	SUBTYPE_PANTS,
+	SUBTYPE_CHEST,
+	SUBTYPE_HELMET,
 }
 
-enum ItemFlags (<<= 1) {
-	UNTRADEABLE,
-	UNSELLABLE,
+enum ItemFlags {
+	FLAG_NONE = 0,
+	FLAG_UNTRADEABLE = 1,
+	FLAG_UNSELLABLE = 2,
 }
 
 enum DataOffset {
@@ -34,7 +36,7 @@ methodmap Item < StringMap {
 		return view_as<Item>(new StringMap());
 	}
 	
-	public void GetName(const char[] buf, int maxlen) {
+	public void GetName(char[] buf, int maxlen) {
 		this.GetString("name", buf, maxlen);
 	}
 
@@ -89,49 +91,51 @@ public void Items_PluginStart() {
 	File file = OpenFile(path, "r");
 	if (file == null)return;
 	
-	char content[8192];
+	char content[1024 * 256]; // 256kb
 	file.ReadString(content, sizeof(content));
 	delete file;
 
 	g_smItems = new StringMap();
 	
 	JSON_Object root = json_decode(content);
-	for (int i = 0; i < root.Length; i++) {
+	if (root == null) {
+		SetFailState("failed to decode items.json");
+	}
+	for (int i = 0; i < root.Length; i += 1) {
 		char key[64];
-		obj.GetKey(i, key, sizeof(key));
+		root.GetKey(i, key, sizeof(key));
+
+		if (key[0] == '\0' || root.GetHidden(key) || root.GetType(key) == JSON_Type_Invalid) {
+			continue; // eh
+		}
 
 		JSON_Object item = root.GetObject(key);
 		if (item == null) {
-			SetFailState("item at %d in items.json is not an object", i);
-			return;
+			continue;
 		}
 
 		char typebuf[32];
 		item.GetString("type", typebuf, sizeof(typebuf));
 		if (typebuf[0] == '\0') {
-			SetFailState("item at %d doesnt have a type field", i);
-			return;
+			SetFailState("item %s at %d doesnt have a type field", key, i);
 		}
 
 		char subtypebuf[32];
 		item.GetString("subtype", subtypebuf, sizeof(subtypebuf));
 		if (subtypebuf[0] == '\0') {
-			SetFailState("item at %d doesnt have a subtype field", i)
-			return;
+			strcopy(subtypebuf, sizeof(subtypebuf), "");
 		}
 
 		ItemType type = GetType(typebuf); 
 		ItemSubtype subtype = GetSubtype(subtypebuf);
-		if (type == null || subtype == null) {
-			SetFailState("item at %d has wrong type or sub type", i);
-			return;
+		if (type == TYPE_NONE) {
+			SetFailState("item %s at %d has wrong type ", key, i);
 		}
 
 		char name[64];
 		item.GetString("name", name, sizeof(name));
-		if (name == null) {
-			SetFailState("item at %d doesnt have a name field", i);
-			return;
+		if (name[0] == '\0') {
+			SetFailState("item %s at %d doesnt have a name field", key, i);
 		} // these are alot of fail states...
 
 		Item itemr = new Item();
@@ -140,25 +144,29 @@ public void Items_PluginStart() {
 		itemr.SetValue("subtype", view_as<int>(subtype));
 
 		switch (type) {
-			case ARMOR: {
+			case TYPE_ARMOR: {
 				// do some stuff with stats here im gtoo lazy
 				// like a loop.. or something
 				// perhaps make a modular system so i could use it
 				// with weapons later aswell? hm
+				// todo 
 			}
-			case CONSUMABLE: {
+			case TYPE_CONSUMABLE: {
 				int heal = item.HasKey("heal") ? item.GetInt("heal") : 0;
 
 				ConsumableData data = new ConsumableData();
 				data.Heal = heal;
 
-				item.SetHandle("data", data);
+				itemr.SetValue("data", data);
 			}
 		}
+		g_smItems.SetValue(key, itemr);
+
+		LogMessage("parsed item %s", name);
 	}
 	json_cleanup_and_delete(root);
 	
-	if (g_hItems == null) {
+	if (g_smItems == null) {
 		char err[64];
 		json_get_last_error(err, sizeof(err));
 		SetFailState("failed parsing items.json: %s", err);
@@ -166,18 +174,16 @@ public void Items_PluginStart() {
 }
 
 ItemType GetType(const char[] typebuf) {
-	if (StrEqual(typebuf, "armor")) return ItemType.ARMOR;
-	if (StrEqual(typebuf, "consumable")) return ItemType.CONSUMABLE;
+	if (StrEqual(typebuf, "armor")) return TYPE_ARMOR;
+	if (StrEqual(typebuf, "consumable")) return TYPE_CONSUMABLE;
 	
-	return null;
+	return TYPE_NONE;
 }
 
 ItemSubtype GetSubtype(const char[] stypebuf) {
-	if (StrEqual(stypebuf, "pants")) return ItemSubtype.PANTS;
-	if (StrEqual(stypebuf, "chest")) return ItemSubtype.CHEST;
-	if (StrEqual(stypebuf, "helmet")) return ItemSubtype.HELMET;
+	if (StrEqual(stypebuf, "pants")) return SUBTYPE_PANTS;
+	if (StrEqual(stypebuf, "chest")) return SUBTYPE_CHEST;
+	if (StrEqual(stypebuf, "helmet")) return SUBTYPE_HELMET;
 
-	if (StrEqual(stypebuf, "")) return ItemSubtype.NONE;
-
-	return null;
+	return SUBTYPE_NONE;
 }
