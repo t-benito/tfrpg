@@ -5,3 +5,5 @@
 *.json
 *.txt
 *.sq3
+*.exe
+*.bat
