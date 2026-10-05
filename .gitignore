@@ -1,6 +1,6 @@
 *.smx
 *.log
-!configs/rpg_data/**
+!addons/sourcemod/configs/rpg_data/**
 *.cfg
 *.json
 *.txt
