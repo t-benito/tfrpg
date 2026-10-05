@@ -3,7 +3,6 @@
 *.cfg
 addons/sourcemod/configs/sql-init-scripts/
 addons/sourcemod/configs/geoip/
-addons/sourcemod/scripting/include/rpg/
 *.ini
 *.txt
 *.sq3
