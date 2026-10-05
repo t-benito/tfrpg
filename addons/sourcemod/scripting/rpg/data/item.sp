@@ -6,12 +6,13 @@
 
 #include <rpg/json>
 
-enum ItemType {
+enum ItemType { // CANNOT be NONE.
 	ARMOR,
 	CONSUMABLE,
 }
 
 enum ItemSubtype {
+	NONE,
 	PANTS,
 	CHEST,
 	HELMET,
@@ -19,6 +20,59 @@ enum ItemSubtype {
 
 enum ItemFlags (<<= 1) {
 	UNTRADEABLE,
+	UNSELLABLE,
+}
+
+enum DataOffset {
+	TYPE = 0,
+	SUBTYPE,
+	HEAL,
+}
+
+methodmap Item < StringMap {
+	public Item() {
+		return view_as<Item>(new StringMap());
+	}
+	
+	public void GetName(const char[] buf, int maxlen) {
+		this.GetString("name", buf, maxlen);
+	}
+
+	property ItemType Type {
+		public get() {
+			int v;
+			this.GetValue("type", v);
+			return view_as<ItemType>(v);
+		}
+	}
+	property ItemSubtype Subtype {
+		public get() {
+			int v;
+			this.GetValue("subtype", v);
+			return view_as<ItemSubtype>(v);
+		}
+	}
+	property Handle Data {
+		public get() {
+			Handle h;
+			this.GetValue("data", h);
+			return h;
+		}
+	}
+}
+
+methodmap ConsumableData < ArrayList {
+	public ConsumableData() {
+		return view_as<ConsumableData>(new ArrayList(1, 1));
+	}
+	property int Heal {
+		public get() {
+			return this.Get(0);
+		}
+		public set(int val) {
+			this.Set(0, val);
+		}
+	}
 }
 
 public StringMap g_smItems = null;
@@ -80,12 +134,25 @@ public void Items_PluginStart() {
 			return;
 		} // these are alot of fail states...
 
+		Item itemr = new Item();
+		itemr.SetString("name", name);
+		itemr.SetValue("type", view_as<int>(type));
+		itemr.SetValue("subtype", view_as<int>(subtype));
+
 		switch (type) {
 			case ARMOR: {
-				
+				// do some stuff with stats here im gtoo lazy
+				// like a loop.. or something
+				// perhaps make a modular system so i could use it
+				// with weapons later aswell? hm
 			}
 			case CONSUMABLE: {
-				
+				int heal = item.HasKey("heal") ? item.GetInt("heal") : 0;
+
+				ConsumableData data = new ConsumableData();
+				data.Heal = heal;
+
+				item.SetHandle("data", data);
 			}
 		}
 	}
@@ -109,6 +176,8 @@ ItemSubtype GetSubtype(const char[] stypebuf) {
 	if (StrEqual(stypebuf, "pants")) return ItemSubtype.PANTS;
 	if (StrEqual(stypebuf, "chest")) return ItemSubtype.CHEST;
 	if (StrEqual(stypebuf, "helmet")) return ItemSubtype.HELMET;
+
+	if (StrEqual(stypebuf, "")) return ItemSubtype.NONE;
 
 	return null;
 }

@@ -1,2 +1,31 @@
-[
-]
+{
+    "potato": {
+        "name": "Potato",
+        "use_label": "Eat",
+
+        "type": "consumable",
+
+        "flags": [ "untradeable" ],
+        
+        "buy_price": 24,
+        "sell_price": 18,
+        
+        "heal": 300
+    },
+    "leather_pants": {
+        "name": "Leather Pants",
+        "use_label": "Equip",
+
+        "type": "armor",
+        "subtype": "pants",
+
+        "flags": [],
+
+        "buy_price": 50,
+        "sell_price": 25,
+
+        "stats": [
+            ""
+        ]
+    }
+}
