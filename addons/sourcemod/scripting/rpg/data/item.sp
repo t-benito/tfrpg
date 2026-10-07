@@ -3,8 +3,9 @@
 
 // assumed from Path_SM
 #define ITEMS_PATH "configs/rpg_data/items.json"
+#define MAX_FLAGS 3
 
-#include <rpg/json>
+#include "../../include/rpg/json.inc" // this is ugly but my vs code doesnt accept it otherwise
 
 enum ItemType {
 	TYPE_NONE,
@@ -23,12 +24,6 @@ enum ItemFlags {
 	FLAG_NONE = 0,
 	FLAG_UNTRADEABLE = 1,
 	FLAG_UNSELLABLE = 2,
-}
-
-enum DataOffset {
-	TYPE = 0,
-	SUBTYPE,
-	HEAL,
 }
 
 methodmap Item < StringMap {
@@ -52,6 +47,13 @@ methodmap Item < StringMap {
 			int v;
 			this.GetValue("subtype", v);
 			return view_as<ItemSubtype>(v);
+		}
+	}
+	property ItemFlags Flags {
+		public get() {
+			int v;
+			this.GetValue("flags", v);
+			return view_as<ItemFlags>(v);
 		}
 	}
 	property Handle Data {
@@ -85,7 +87,6 @@ public void Items_PluginStart() {
 	
 	if (!FileExists(path)) {
 		SetFailState("items cant initialize, the given file (%s) doesnt exist", path);
-		return;
 	}
 	
 	File file = OpenFile(path, "r");
@@ -126,6 +127,18 @@ public void Items_PluginStart() {
 			strcopy(subtypebuf, sizeof(subtypebuf), "");
 		}
 
+		ItemFlags flags = FLAG_NONE;
+		JSON_Object oflags = item.GetObject("flags");
+		if (oflags != null) {
+			for (int j = 0; j < MAX_FLAGS; j++) {
+				char flag[64];
+				oflags.GetKey(j, flag, sizeof(flag));
+
+				ItemFlags iflag = GetFlag(flag);
+				flags <<= iflag;
+			}
+		}
+		
 		ItemType type = GetType(typebuf); 
 		ItemSubtype subtype = GetSubtype(subtypebuf);
 		if (type == TYPE_NONE) {
@@ -142,6 +155,7 @@ public void Items_PluginStart() {
 		itemr.SetString("name", name);
 		itemr.SetValue("type", view_as<int>(type));
 		itemr.SetValue("subtype", view_as<int>(subtype));
+		itemr.SetValue("flags", view_as<int>(flags));
 
 		switch (type) {
 			case TYPE_ARMOR: {
@@ -150,6 +164,7 @@ public void Items_PluginStart() {
 				// perhaps make a modular system so i could use it
 				// with weapons later aswell? hm
 				// todo 
+				// still todo btw
 			}
 			case TYPE_CONSUMABLE: {
 				int heal = item.HasKey("heal") ? item.GetInt("heal") : 0;
@@ -162,7 +177,7 @@ public void Items_PluginStart() {
 		}
 		g_smItems.SetValue(key, itemr);
 
-		LogMessage("parsed item %s", name);
+		LogMessage("parsed item '%s'", name);
 	}
 	json_cleanup_and_delete(root);
 	
@@ -186,4 +201,11 @@ ItemSubtype GetSubtype(const char[] stypebuf) {
 	if (StrEqual(stypebuf, "helmet")) return SUBTYPE_HELMET;
 
 	return SUBTYPE_NONE;
+}
+
+ItemFlags GetFlag(const char[] flagbuf) {
+	if (StrEqual(flagbuf, "untradeable")) return FLAG_UNTRADEABLE;
+	if (StrEqual(flagbuf, "unsellable")) return FLAG_UNSELLABLE;
+
+	return FLAG_NONE;
 }
