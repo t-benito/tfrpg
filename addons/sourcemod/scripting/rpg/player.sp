@@ -83,6 +83,12 @@ methodmap Player {
 	}
 	public int GetSkillLvl(SkillType skill) {
 		return g_iSkills[view_as<int>(this)][view_as<int>(skill)];
+	} // maybe turn this to a porperty?... 
+	public void SetSkill(SkillType skill, int val) {
+		g_iSkills[view_as<int>(this)][view_as<int>(skill)] = val;
+	}
+	public void SetSkillI(int skill, int val) {
+		g_iSkills[view_as<int>(this)][skill] = val;
 	}
 
 
