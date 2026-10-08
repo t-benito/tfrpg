@@ -33,6 +33,7 @@ public void DB_ClientPutInServer(int client) {
 		player.Credits = g_kvDatabase.GetNum("credits");
 		player.XP = g_kvDatabase.GetNum("xp");
 		player.Level = g_kvDatabase.GetNum("lvl");
+		// todo : skills loading
 		
 		g_kvDatabase.Rewind();
 	}

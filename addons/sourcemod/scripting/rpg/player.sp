@@ -69,6 +69,12 @@ methodmap Player {
 			g_iLevel[view_as<int>(this)] = val;
 		}
 	}
+
+	public void Update() {
+		int consti = this.GetSkillLvl(Constitution);
+
+		SetEntProp(view_as<int>(this), Prop_Data, "m_iMaxHealth", consti * 30);
+	}
 	
 	// because you cant have arrays as properties..
 	// thisll do
@@ -89,7 +95,7 @@ methodmap Player {
 			this.XP -= req;
 			this.LevelProgress++;
 
-			Player_Update(this);
+			this.Update();
 
 			int reqProgress = this.GetRequiredLvlPrgrs();
 			if (this.LevelProgress >= reqProgress) {
@@ -104,10 +110,4 @@ methodmap Player {
 
 public Player Player_Get(int client) {
 	return view_as<Player>(client);
-}
-
-public void Player_Update(Player player) {
-	int consti = player.GetSkillLvl(Constitution);
-
-	SetEntProp(view_as<int>(player), Prop_Data, "m_iMaxHealth", consti * 30);
 }
