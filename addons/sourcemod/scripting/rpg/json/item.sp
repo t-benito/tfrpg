@@ -65,6 +65,9 @@ methodmap Item < StringMap {
 	}
 }
 
+/*
+ * index 0: heal
+*/
 methodmap ConsumableData < ArrayList {
 	public ConsumableData() {
 		return view_as<ConsumableData>(new ArrayList(1, 1));
@@ -76,6 +79,20 @@ methodmap ConsumableData < ArrayList {
 		public set(int val) {
 			this.Set(0, val);
 		}
+	}
+}
+
+/*
+ * index 0: array of skills
+*/
+methodmap ArmorData < ArrayList {
+	public ArmorData() {
+		return view_as<ArmorData>(new ArrayList(1, 1));
+	}
+	public int[] GetSkillBonuses() {
+		int buf[SKILLCOUNT]; // why is this here ?... i dont include it anywhere..???
+		this.GetArray(0, buf); // not gonna complainthouugh ig
+		return buf;
 	}
 }
 
@@ -135,7 +152,7 @@ public void Items_PluginStart() {
 				oflags.GetKey(j, flag, sizeof(flag));
 
 				ItemFlags iflag = GetFlag(flag);
-				flags <<= iflag;
+				flags <<= iflag; // dont know if this math is right todo
 			}
 		}
 		
@@ -159,12 +176,18 @@ public void Items_PluginStart() {
 
 		switch (type) {
 			case TYPE_ARMOR: {
-				// do some stuff with stats here im gtoo lazy
-				// like a loop.. or something
-				// perhaps make a modular system so i could use it
-				// with weapons later aswell? hm
-				// todo 
-				// still todo btw
+				JSON_Object bonuses = item.GetObject("bonuses");
+				if (bonuses == null) {
+					SetFailState("armor item %s at %d doesnt have bonuses", key, i);
+				}
+
+				int ibonuses[SKILLCOUNT];
+				for (int j = 0; j < SKILLCOUNT; j++) {
+					int bonus = bonuses.GetInt(g_SkillNames[j]);
+					ibonuses[j] = bonus;
+				}
+				ArmorData data = new ArmorData();
+				data.SetArray(0, ibonuses);
 			}
 			case TYPE_CONSUMABLE: {
 				int heal = item.HasKey("heal") ? item.GetInt("heal") : 0;

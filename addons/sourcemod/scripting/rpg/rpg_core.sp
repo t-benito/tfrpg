@@ -3,8 +3,8 @@
 #include "player.sp"
 #include "database.sp"
 
-#include "data/item.sp"
-#include "data/entity.sp"
+#include "json/item.sp"
+#include "json/entity.sp"
 
 #pragma semicolon 1
 #pragma newdecls required

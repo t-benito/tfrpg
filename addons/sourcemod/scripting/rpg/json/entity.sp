@@ -1,9 +1,8 @@
-// another json parser.
 #pragma semicolon 1
 #pragma newdecls required
 
 // start from Path_SM
-#define ENTITES_PATH "configs/rpg_data/entities.json"
+#define ENTITIES_PATH "configs/rpg_data/entities.json"
 #define MAX_DROPS 3
 
 #include "../../include/rpg/json.inc"
@@ -70,7 +69,7 @@ StringMap g_smEntities = null;
 
 public void Entities_PluginStart() {
     char path[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, path, sizeof(path), ENTITES_PATH);
+	BuildPath(Path_SM, path, sizeof(path), ENTITIES_PATH);
 	
 	if (!FileExists(path)) {
 		SetFailState("entities cant initialize, the given file (%s) doesnt exist", path);
@@ -165,7 +164,7 @@ public void Entities_PluginStart() {
         spawn.SetValue("max_xp", max_xp);
 
         g_smEntities.SetValue(key, spawn);
-        LogMessage("parsed entity %s aka %s", key, name);
+        LogMessage("parsed entity '%s' aka '%s'", key, name);
     }
     json_cleanup_and_delete(root);
     

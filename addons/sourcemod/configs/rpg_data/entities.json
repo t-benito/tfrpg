@@ -1,22 +1,20 @@
 {
-    "rpg_entspawn_zone_1": {
-        "ent_chicken": {
-            "name": "Chicken",
-            "respawn_time": 8.0,
-            "health": {
-                "min": 70,
-                "max": 90
-            },
-            "xp": {
-                "min": 1,
-                "max": 1
-            },
-            "drops": [
-                {
-                    "item": "pumpkin_seed",
-                    "chance": 0.2
-                }
-            ]
-        }
+    "ent_chicken": {
+        "name": "Chicken",
+        "respawn_time": 8.0,
+        "health": {
+            "min": 70,
+            "max": 90
+        },
+        "xp": {
+            "min": 1,
+            "max": 1
+        },
+        "drops": [
+            {
+                "item": "potato",
+                "chance": 0.2
+            }
+        ]
     }
 }

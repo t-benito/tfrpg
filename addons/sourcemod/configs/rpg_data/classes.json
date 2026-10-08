@@ -1,0 +1,42 @@
+{
+    "human": {
+        "name": "Human",
+        "description": "The boring human",
+        "base": {
+            "Strength": 5,
+            "Precision": 5,
+            "Wisdom": 5,
+            "Resistance": 1,
+            "Constitution": 5,
+            "Intelligence": 10
+        },
+        "multiplier": {
+            "Strength": 1,
+            "Precision": 1,
+            "Wisdom": 1,
+            "Resistance": 1,
+            "Constitution": 1,
+            "Intelligence": 1
+        }
+    },
+    "titan": {
+        "name": "Titan",
+        "description": "The strong titan!\nNamed after their origin 'planet', the moon Titan",
+        "base": {
+            "Strength": 10,
+            "Precision": 1,
+            "Wisdom": 1,
+            "Resistance": 15,
+            "Constitution": 15,
+            "Intelligence": 3
+        },
+        "multiplier": {
+            "Strength": 1.3,
+            "Precision": 0.8,
+            "Wisdom": 0.8,
+            "Resistance": 1.2,
+            "Constitution": 1.2,
+            "Intelligence": 0.8
+        }
+    }
+}
