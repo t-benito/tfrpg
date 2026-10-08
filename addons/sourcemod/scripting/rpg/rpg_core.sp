@@ -18,7 +18,6 @@ public void RPG_PluginStart() {
 }
 
 public void RPG_ClientPutInServer(int client) {
-	//Player_ClientPutInServer(client);
 	DB_ClientPutInServer(client);
 }
 
