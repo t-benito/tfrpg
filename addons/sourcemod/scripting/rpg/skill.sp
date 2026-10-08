@@ -1,15 +1,31 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define SKILLCOUNT 7
+#define SKILLCOUNT 6
 
 enum SkillType {
-    Strength, // melee hit
-    Precision, // range hit
-    Wisdom, // magic hit
-    Resistance, // dmg reduction
-    Constitution, // hp
-    Intelligence, // spells/teleports..
-    Agility, // move speeed
+    Strength,
+    Precision,
+    Wisdom,
+    Resistance,
+    Constitution,
+    Intelligence,
 }
 
+char g_SkillNames[SKILLCOUNT][] = {
+    "Strength",
+    "Precision",
+    "Wisdom",
+    "Resistance",
+    "Constitution",
+    "Intelligence",
+};
+
+char g_SkillHelp[SKILLCOUNT][] = {
+    "Increases melee DMG", // Strength
+    "Increases ranged DMG", // Prescision
+    "Increases magic DMG", // wisdom
+    "Reduces damage taken", // Resistance
+    "Increases max HP", // constituition
+    "Used for crafting, spells, and bonuses", // intelligence
+};
