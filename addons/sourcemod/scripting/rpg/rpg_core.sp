@@ -4,6 +4,7 @@
 #include "database.sp"
 
 #include "data/item.sp"
+#include "data/entity.sp"
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -13,6 +14,7 @@ public void RPG_PluginStart() {
 
 	DB_PluginStart();
 	Items_PluginStart();
+	Entities_PluginStart();
 }
 
 public void RPG_ClientPutInServer(int client) {

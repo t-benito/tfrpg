@@ -13,7 +13,6 @@ public void OnPluginStart(){
 }
 
 public void OnClientPutInServer(int client) {
-	Player_Get(client).Credits += 10;
     RPG_ClientPutInServer(client);
 }
 
