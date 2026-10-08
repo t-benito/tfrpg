@@ -1,8 +1,7 @@
 #include <sourcemod>
 
-#include "player.sp"
 #include "database.sp"
-
+#include "player.sp"
 #include "json/item.sp"
 #include "json/entity.sp"
 

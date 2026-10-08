@@ -5,6 +5,7 @@
 #define ITEMS_PATH "configs/rpg_data/items.json"
 #define MAX_FLAGS 3
 
+#include "../skill.sp"
 #include "../../include/rpg/json.inc" // this is ugly but my vs code doesnt accept it otherwise
 
 enum ItemType {
@@ -90,8 +91,8 @@ methodmap ArmorData < ArrayList {
 		return view_as<ArmorData>(new ArrayList(1, 1));
 	}
 	public int[] GetSkillBonuses() {
-		int buf[SKILLCOUNT]; // why is this here ?... i dont include it anywhere..???
-		this.GetArray(0, buf); // not gonna complainthouugh ig
+		int buf[SKILLCOUNT];
+		this.GetArray(0, buf);
 		return buf;
 	}
 }
@@ -176,9 +177,9 @@ public void Items_PluginStart() {
 
 		switch (type) {
 			case TYPE_ARMOR: {
-				JSON_Object bonuses = item.GetObject("bonuses");
+				JSON_Object bonuses = item.GetObject("stats"/*i liked this more*/);
 				if (bonuses == null) {
-					SetFailState("armor item %s at %d doesnt have bonuses", key, i);
+					SetFailState("armor item %s at %d doesnt have stats", key, i);
 				}
 
 				int ibonuses[SKILLCOUNT];

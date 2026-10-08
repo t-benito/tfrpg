@@ -24,8 +24,27 @@
         "buy_price": 50,
         "sell_price": 25,
 
-        "stats": [
-            ""
-        ]
+        "stats": {
+            "Precision": 5,
+            "Resistance": 13,
+            "Constitution": 7
+        }
+    },
+    "leather_boots": {
+        "name": "Leather Boots",
+        "use_label": "Equip",
+
+        "type": "armor",
+        "subtype": "pants",
+
+        "flags": [],
+
+        "buy_price": 45,
+        "sell_price": 20,
+
+        "stats": {
+            "Precision": 10,
+            "Constitution": 3
+        }
     }
 }

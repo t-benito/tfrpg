@@ -88,6 +88,7 @@ methodmap Player {
 		g_iSkills[view_as<int>(this)][view_as<int>(skill)] = val;
 	}
 	public void SetSkillI(int skill, int val) {
+		//assert(skill >= 0 && skill < SKILLCOUNT);
 		g_iSkills[view_as<int>(this)][skill] = val;
 	}
 
